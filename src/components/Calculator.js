@@ -28,6 +28,7 @@ export default class Calculator extends Component {
 
   clearLastChar() {
     const { displayValue } = this.state;
+
     this.setState({
       displayValue: displayValue.substring(0, displayValue.length - 1) || "0",
     });
@@ -36,7 +37,10 @@ export default class Calculator extends Component {
   toggleSign() {
     const { displayValue } = this.state;
     const newValue = parseFloat(displayValue) * -1;
-    this.setState({ displayValue: String(newValue) });
+
+    this.setState({
+      displayValue: String(newValue),
+    });
   }
 
   inputPercent() {
@@ -104,10 +108,11 @@ export default class Calculator extends Component {
     });
   }
 
-  handleKeyDown(event) {
+  handleKeyDown = (event) => {
     let { key } = event;
 
     if (key === "Enter") key = "=";
+
     if (/\d/.test(key)) {
       event.preventDefault();
       this.inputDigit(parseInt(key, 10));
@@ -125,22 +130,26 @@ export default class Calculator extends Component {
       this.clearLastChar();
     } else if (key === "Clear") {
       event.preventDefault();
+
       if (this.state.displayValue !== "0") {
         this.clearDisplay();
       } else {
         this.clearAll();
       }
     }
-  }
+  };
 
   componentDidMount() {
     document.addEventListener("keydown", this.handleKeyDown);
   }
-  componentWillMount() {
+
+  componentWillUnmount() {
     document.removeEventListener("keydown", this.handleKeyDown);
   }
+
   render() {
     const { displayValue } = this.state;
+
     const clearDisplay = displayValue !== "0";
     const clearText = clearDisplay ? "C" : "AC";
 
@@ -160,13 +169,13 @@ export default class Calculator extends Component {
               </CalculatorKey>
               <CalculatorKey
                 className="key-sign"
-                onPress={() => this.toggleSign}
+                onPress={() => this.toggleSign()}
               >
                 ±
               </CalculatorKey>
               <CalculatorKey
                 className="key-percent"
-                onPress={() => this.inputPercent}
+                onPress={() => this.inputPercent()}
               >
                 %
               </CalculatorKey>
@@ -180,9 +189,9 @@ export default class Calculator extends Component {
               </CalculatorKey>
               <CalculatorKey
                 className="key-dot"
-                onPress={() => this.inputDigit()}
+                onPress={() => this.inputDot()}
               >
-                .
+                ●
               </CalculatorKey>
               <CalculatorKey
                 className="key-1"
@@ -239,6 +248,38 @@ export default class Calculator extends Component {
                 9
               </CalculatorKey>
             </div>
+          </div>
+          <div className="operator-keys">
+            <CalculatorKey
+              className="key-divide"
+              onPress={() => this.performOperation("/")}
+            >
+              ÷
+            </CalculatorKey>
+            <CalculatorKey
+              className="key-multiply"
+              onPress={() => this.performOperation("*")}
+            >
+              ×
+            </CalculatorKey>
+            <CalculatorKey
+              className="key-subtract"
+              onPress={() => this.performOperation("-")}
+            >
+              −
+            </CalculatorKey>
+            <CalculatorKey
+              className="key-add"
+              onPress={() => this.performOperation("+")}
+            >
+              +
+            </CalculatorKey>
+            <CalculatorKey
+              className="key-equals"
+              onPress={() => this.performOperation("=")}
+            >
+              =
+            </CalculatorKey>
           </div>
         </div>
       </div>
